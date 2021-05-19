@@ -156,12 +156,16 @@ components:
           $ref: '#/components/schemas/Amount'
         interest_extrapolation_assumptions_net_interest_different_scenarios:
           $ref: '#/components/schemas/Interest'
-        counter_children:
-          type: number
-          format: integer
         type_of_insurance:
-          type: object
-          description: clarify with andreas
+          oneOf:
+            - $ref: '#/components/schemas/TypeOfInsurance'
+            - enum:
+                - id: '1'
+                  full_name_de: 'Direktversicherung (klassisch)'
+                - id: '2'
+                  full_name_de: 'Riester Versicherung (klassisch)'
+                - id: '3'
+                  full_name_de: 'Basisrente - klassisch'
         percent_profit_participation_current:
           type: number
           format: double
@@ -194,10 +198,6 @@ components:
           $ref: '#/components/schemas/Factor'
         interest_guaranteed:
           $ref: '#/components/schemas/Interest'
-        date_childs_birthdates:
-          type: array
-          items: 
-            $ref: '#/components/schemas/Date'
         amount_extrapolation_pension_assets:
           $ref: '#/components/schemas/Amount'
         amount_extrapolation_pension_assets_guaranteed:
@@ -213,18 +213,28 @@ components:
         amount_pension_with_fund_growth_by_percent:
           $ref: '#/components/schemas/Amount'
         amount_pension_guaranteed_based_on_current_contributions:
-          description: clarify with andreas. Not final
+          $ref: '#/components/schemas/Amount'
         amount_pension_guranteed_based_on_current_contributions_and_allowances:
           $ref: '#/components/schemas/Amount'
         amount_pension_guranteed_without_further_contributions_and_without_allowances:
           $ref: '#/components/schemas/Amount'
         amount_pension_guaranteed_without_further_contributions:
           $ref: '#/components/schemas/Amount'
-        flag_children:
+        flag_child_allowances:
           type: boolean
+        childs:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Child'
         id_pia_class:
-          type: object
-          description: clarify with andreas
+          oneOf:
+            - $ref: '#/components/schemas/PIAClass'
+            - enum:
+                - id: 'CRK-1'
+                - id: 'CRK-2'
+                - id: 'CRK-3'
+                - id: 'CRK-4'
+                - id: 'CRK-5'
         factor_pension_if_not_converted_into_oldage_pension:
           $ref: '#/components/schemas/Factor'
         amount_riester_credit_payments_and_allowances_as_of_today:
@@ -233,11 +243,25 @@ components:
           $ref: '#/components/schemas/Date'
         name_policyholder:
           type: string
-        number_and_age_of_children:
-          type: object
-          description: clarify with andreas
-        flag_child_allowances:
-          type: boolean
+    TypeOfInsurance:
+      type: object
+      description: Complex object for type of insurance, according to GDV
+      properties:
+        id:
+          type: string
+        full_name_de:
+          type: string
+    PIAClass:
+      type: object
+      description: Complex object for PIA Class, according to https://produktinformationsstelle.de/
+      properties:
+        id:
+          type: string
+    Child:
+      type: object
+      properties:
+        birthdate:
+          $ref: '#/components/schemas/Date'
   securitySchemes:
     oAuth2:
       type: oauth2
